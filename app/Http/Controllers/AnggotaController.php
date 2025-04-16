@@ -34,6 +34,7 @@ class AnggotaController extends Controller
      */
     public function store(Request $request)
     {
+        //ddd($request);
         //dd($request);
         $validatedData = $request->validate([
             'nama' => 'required|max:255', 
@@ -56,7 +57,11 @@ class AnggotaController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $anggota = Anggota::find($id); 
+        return view('v_anggota.edit', [ 
+            'judul' => 'Ubah Anggota', 
+            'edit' => $anggota 
+        ]);
     }
 
     /**
@@ -64,7 +69,13 @@ class AnggotaController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $rules = [ 
+            'nama' => 'required|max:100', 
+            'hp' => 'required|min:10|max:13', 
+        ]; 
+        $validatedData = $request->validate($rules); 
+        Anggota::where('id', $id)->update($validatedData); 
+        return redirect('/anggota');
     }
 
     /**
@@ -72,6 +83,8 @@ class AnggotaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $anggota = Anggota::findOrFail($id); 
+        $anggota->delete(); 
+        return redirect('/anggota');
     }
 }
